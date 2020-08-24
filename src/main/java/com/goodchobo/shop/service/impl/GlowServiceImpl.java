@@ -20,4 +20,9 @@ public class GlowServiceImpl implements GlowService{
 	@Inject
 	private GlowDao GlowDao;
 
+	public void test() {
+		System.out.println("#########");
+	}
+
+
 }
