@@ -22,6 +22,8 @@ public class GlowServiceImpl implements GlowService{
 
 	public void test() {
 		System.out.println("#########");
+		System.out.println("#########");
+		System.out.println("#########");
 	}
 
 
