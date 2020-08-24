@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goodchobo.shop.dao.HelpDao">
+	<sql id="noticeVO">
+		n.id
+		, n.help_type
+		, n.display_status
+		, n.title
+		, n.content
+		, DATE_FORMAT(n.created_at, '%Y-%m-%d') AS createdAt
+		, n.created_by
+		, DATE_FORMAT(n.updated_at, '%Y-%m-%d') AS updatedAt
+		, n.updated_by
+	</sql>
+
+	<select id="selectNotice" parameterType="NoticeVO" resultType="NoticeVO">
+		SELECT
+			<include refid="noticeVO"/>
+		FROM notices n
+		WHERE 1=1
+		<if test='helpType != null and helpType != ""'>AND help_type = #{helpType}</if>
+		<if test='displayStatus != null and displayStatus != ""'>AND display_status = #{displayStatus}</if>
+		ORDER BY created_at DESC
+	</select>
+
+	<select id="selectNoticeCount" parameterType="NoticeVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM notices n
+		WHERE 1=1
+		<if test='helpType != null and helpType != ""'>AND help_type = #{helpType}</if>
+		<if test='displayStatus != null and displayStatus != ""'>AND display_status = #{displayStatus}</if>
+		ORDER BY created_at DESC
+	</select>
+</mapper>
