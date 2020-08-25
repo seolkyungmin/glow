@@ -1,13 +1,10 @@
 package com.goodchobo.common.model;
 
-import java.util.List;
+public class TagVO {
 
-
-public class GlowVO {
 	private int id;		//PK
-	private String name;
-	private int point;
-	private List<PictureVO> pictuerList;
+	private String tagName;
+	private int pictureChildId;
 	private String createdAt;
 	private String updatedAt;
 
@@ -19,28 +16,20 @@ public class GlowVO {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTagName() {
+		return tagName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
-	public int getPoint() {
-		return point;
+	public int getPictureChildId() {
+		return pictureChildId;
 	}
 
-	public void setPoint(int point) {
-		this.point = point;
-	}
-
-	public List<PictureVO> getPictuerList() {
-		return pictuerList;
-	}
-
-	public void setPictuerList(List<PictureVO> pictuerList) {
-		this.pictuerList = pictuerList;
+	public void setPictureChildId(int pictureChildId) {
+		this.pictureChildId = pictureChildId;
 	}
 
 	public String getCreatedAt() {
@@ -58,5 +47,6 @@ public class GlowVO {
 	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
 
 }
