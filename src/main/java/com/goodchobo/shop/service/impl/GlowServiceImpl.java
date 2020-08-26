@@ -14,6 +14,7 @@ import com.goodchobo.common.exception.BusinessException;
 import com.goodchobo.common.model.GlowVO;
 import com.goodchobo.common.model.PictureChildVO;
 import com.goodchobo.common.model.PictureVO;
+import com.goodchobo.common.model.PointLogVO;
 import com.goodchobo.common.model.TagVO;
 import com.goodchobo.common.util.StringUtil;
 import com.goodchobo.shop.dao.GlowDao;
@@ -38,7 +39,8 @@ public class GlowServiceImpl implements GlowService{
 		if(dupCount > 0) {
 			throw new BusinessException(ReplyStatusCode.DUPLICATE_CODENAME);
 		}
-
+		// 다른사람과 폴더이름 중복 안되게 함
+		paramVO.setName(paramVO.getUserId()+"_"+paramVO.getName());
 		int result = glowDao.insertPicture(paramVO);
 
 		if(result < 0) {
@@ -50,11 +52,19 @@ public class GlowServiceImpl implements GlowService{
 		glow.setId(paramVO.getUserId());
 		glow = glowDao.selectGlow(glow);
 		int glowPoint = glow.getPoints();
-		glowPoint += Consts.FOLDER_CREATE_POINT;
+		glowPoint += Consts.PICTURE_CREATE_POINT;
 		glow.setPoints(glowPoint);
 		int pointResult = glowDao.insertGlowPoint(glow);
 
 		if(pointResult < 0) {
+			throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+		}
+
+		//4. 포인트에 대한 선입/선출
+		int pointLog = 0;
+		pointLog = insertLog(paramVO, Consts.PICTURE_TYPE);
+
+		if(pointLog < 0) {
 			throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
 		}
 
@@ -111,6 +121,14 @@ public class GlowServiceImpl implements GlowService{
 				}
 			}
 			index++;
+
+			//4. 포인트에 대한 선입/선출
+			int pointLog = 0;
+			pointLog = insertLog(paramVO, Consts.PICTURE_CHILD_TYPE);
+
+			if(pointLog < 0) {
+				throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+			}
 		}
 		paramVO.setId(paramVO.getId());
 
@@ -121,7 +139,7 @@ public class GlowServiceImpl implements GlowService{
 	   유저는 특정 폴더에서 최근 저장한 순서대로 사진을 조회할 수 있다.
 	 */
 	@Override
-	public ArrayList<PictureVO> selectPicture(GlowVO paramVO) throws BusinessException {
+	public ArrayList<PictureVO> selectPicture(PictureVO paramVO) throws BusinessException {
 		log.debug("### GlowServiceImpl.selectPicture : PictureVO = " + StringUtil.nullCheckStr(paramVO));
 		try {
 			ArrayList<PictureVO> pictureList = new ArrayList<PictureVO>();
@@ -151,6 +169,70 @@ public class GlowServiceImpl implements GlowService{
 			return tagRankingList;
 		} catch (Exception e) {
 			log.error("GlowServiceImpl.selectPicture :: " + e.getMessage());
+			throw new BusinessException(ReplyStatusCode.FAILED_SELECT_RDS);
+		}
+	}
+
+	/**
+	 * log 쌓는 공통 함수
+	 * @param paramVO
+	 * @param type
+	 * @return
+	 * @throws BusinessException
+	 */
+	public int insertLog(PictureVO paramVO, String type) throws BusinessException{
+		PointLogVO pointLogVO = new PointLogVO();
+		int pointLog = 0;
+		if(type.equals("picture")) {
+			pointLogVO.setPoints(Consts.PICTURE_CREATE_POINT);
+			pointLogVO.setLogData(Consts.PICTURE_CREATE_POINT_LOG);
+		}else if(type.equals("pictureChild")) {
+			pointLogVO.setPoints(Consts.PICTURE_CHILD_CREATE_POINT);
+			pointLogVO.setLogData(Consts.PICTURE_CHILD_CREATE_POINT_LOG);
+		}
+
+		pointLogVO.setUserId(paramVO.getUserId());
+		pointLogVO.setPictureId(paramVO.getId());
+		pointLog = glowDao.insertPointLog(pointLogVO);
+
+		if(pointLog < 0) {
+			throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+		}
+
+		return pointLog;
+	}
+
+	@Override
+	public ArrayList<PictureVO> selectPicturePointStats(PictureVO paramVO) throws BusinessException {
+		log.debug("### GlowServiceImpl.selectPicturePointStats : PictureVO = " + StringUtil.nullCheckStr(paramVO));
+		try {
+
+			ArrayList<PictureVO> pictureList = new ArrayList<PictureVO>();
+			pictureList = glowDao.selectPicturePointStats(paramVO);
+			ArrayList<PointLogVO> pointLogList = new ArrayList<PointLogVO>();
+			PointLogVO pointLog = new PointLogVO();
+			for(PictureVO picture : pictureList) {
+				log.info("######################## " + picture.getId());
+				pointLog.setUserId(paramVO.getUserId());
+				pointLog.setPictureId(picture.getId());
+				pointLogList = glowDao.selectPicturePointDetailStats(pointLog);
+				picture.setPointLogList(pointLogList);
+			}
+
+			return pictureList;
+		} catch (Exception e) {
+			log.error("GlowServiceImpl.selectPicturePointStats :: " + e.getMessage());
+			throw new BusinessException(ReplyStatusCode.FAILED_SELECT_RDS);
+		}
+	}
+
+	@Override
+	public ArrayList<PointLogVO> selectPictureUnused(PointLogVO paramVO) throws BusinessException {
+		log.debug("### GlowServiceImpl.selectPictureUnused : PictureVO = " + StringUtil.nullCheckStr(paramVO));
+		try {
+			return glowDao.selectPictureUnused(paramVO);
+		} catch (Exception e) {
+			log.error("GlowServiceImpl.selectPictureUnused :: " + e.getMessage());
 			throw new BusinessException(ReplyStatusCode.FAILED_SELECT_RDS);
 		}
 	}

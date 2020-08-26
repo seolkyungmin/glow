@@ -12,6 +12,8 @@ public class PictureVO{
 	private String createdAt;
 	private String updatedAt;
 
+	private List<PointLogVO> pointLogList;
+
 	public int getId() {
 		return id;
 	}
@@ -66,6 +68,14 @@ public class PictureVO{
 
 	public void setPictureCounts(int pictureCounts) {
 		this.pictureCounts = pictureCounts;
+	}
+
+	public List<PointLogVO> getPointLogList() {
+		return pointLogList;
+	}
+
+	public void setPointLogList(List<PointLogVO> pointLogList) {
+		this.pointLogList = pointLogList;
 	}
 
 }

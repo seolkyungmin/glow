@@ -47,7 +47,7 @@
 	    </selectKey>
 	</insert>
 
-	<select id="selectPicture" parameterType="GlowVO" resultType="PictureVO">
+	<select id="selectPicture" parameterType="PictureVO" resultType="PictureVO">
 		SELECT tu.id AS userId
 			, tp.name
 			, tp.id
@@ -58,23 +58,26 @@
 			, test_picture tp
 		WHERE 1=1
 		AND tu.id = tp.user_id
+		<if test='userId != null and userId != ""'>
+		AND tu.id = #{userId}
+		</if>
 		<if test='name != null and name != ""'>
-		AND tu.name = #{name}
+		AND tp.name = #{name}
 		</if>
 		ORDER BY tp.created_at ASC
 	</select>
 
 	<select id="selectPictureChild" parameterType="PictureVO" resultType="PictureChildVO">
-		SELECT tpc.id
+		SELECT tp.id
+			, tpc.id
 			, tpc.url
 			, tpc.name
 			, tpc.created_at
 			, tpc.updated_at
 			, tpc.picture_id
 		FROM test_picture tp
-			, test_picture_child tpc
+		LEFT JOIN test_picture_child tpc ON tp.id = tpc.picture_id
 		WHERE 1=1
-		AND tp.id = tpc.picture_id
 		<if test='id != null and id != ""'>
 		AND tp.id = #{id}
 		</if>
@@ -156,4 +159,72 @@
 		WHERE id = #{id}
 	</select>
 
+	<insert id="insertPointLog" parameterType="PointLogVO">
+		INSERT INTO test_point_log (
+			user_id
+			, picture_id
+			, points
+			, log_data
+			, created_at
+			, updated_at
+		) VALUES (
+			#{userId}
+			, #{pictureId}
+			, #{points}
+			, #{logData}
+			, NOW()
+			, NOW()
+		)
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+
+	<select id="selectPicturePointStats" parameterType="PictureVO" resultType="PictureVO">
+		SELECT tp.id
+			, tp.name
+			, tp.user_id
+			, tp.created_at
+			, tp.updated_at
+			, tpl.picture_id
+		FROM test_point_log tpl
+			, test_picture tp
+		WHERE tpl.picture_id = tp.id
+		<if test='userId != null and userId != ""'>
+		AND tpl.user_id = #{userId}
+		</if>
+		GROUP BY tpl.picture_id
+	</select>
+
+	<select id="selectPicturePointDetailStats" parameterType="PointLogVO" resultType="PointLogVO">
+		SELECT  tpl.id
+			, SUM(IF(tpl.log_data= 'PICTURE_CREATE_POINT', 0 , tpl.points)) AS minusPoint
+			, SUM(IF(tpl.log_data= 'PICTURE_CHILD_CREATE_POINT', 0 , tpl.points)) AS plusPoint
+		FROM test_point_log tpl
+			, test_picture tp
+		WHERE tpl.picture_id = tp.id
+		<if test='userId != null and userId != ""'>
+		AND tpl.user_id = #{userId}
+		</if>
+		<if test='pictureId != null and pictureId != ""'>
+		AND tpl.picture_id = #{pictureId}
+		</if>
+		GROUP BY picture_id
+	</select>
+
+	<select id="selectPictureUnused" parameterType="PictureVO" resultType="PictureVO">
+		SELECT id
+			, user_id
+			, picture_id
+			, points
+			, log_data
+			, created_at
+			, updated_at
+			FROM(
+			SELECT SUM(IF(tpl.log_data= 'PICTURE_CHILD_CREATE_POINT', 1 , 0)) AS usePoint , tpl.* FROM test_point_log tpl
+			GROUP BY picture_id
+		) a
+		WHERE 1=1
+		AND a.usePoint = 0
+	</select>
 </mapper>

@@ -22,9 +22,11 @@ import com.goodchobo.common.exception.BusinessException;
 import com.goodchobo.common.model.GlowVO;
 import com.goodchobo.common.model.PictureChildVO;
 import com.goodchobo.common.model.PictureVO;
+import com.goodchobo.common.model.PointLogVO;
 import com.goodchobo.common.model.TagVO;
 import com.goodchobo.common.reply.ReplyVO;
 import com.goodchobo.common.util.CommonUtil;
+import com.goodchobo.common.util.JsonViewUtil;
 import com.goodchobo.common.util.StringUtil;
 import com.goodchobo.shop.service.GlowService;
 
@@ -90,7 +92,7 @@ public class GlowController {
 	 */
 	@ApiFunctionType(type = {FunctionType.GET})
 	@RequestMapping(value= "/glow/pictures", method= {RequestMethod.GET})
-	public Object selectPicture(GlowVO paramVO) throws Exception {
+	public Object selectPicture(PictureVO paramVO) throws Exception {
 		log.debug("### GlowController.selectPicture : paramVO = " + StringUtil.nullCheckStr(paramVO));
 
 		Map<String,Object> resultMap = new HashMap<String,Object>();
@@ -108,6 +110,41 @@ public class GlowController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 
 		resultMap.put("list", glowService.selectPictureTagRanking(paramVO));
+
+		return ReplyVO.createSuccessReply(resultMap);
+	}
+
+	/**
+	 * 통계를 위해 전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출한다.
+	 * @param paramVO
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiFunctionType(type = {FunctionType.GET})
+	@RequestMapping(value= "/glow/pictures/stats", method= {RequestMethod.GET})
+	public Object selectPicturePointStats(PictureVO paramVO) throws Exception {
+		log.debug("### GlowController.selectPicturePointStats : paramVO = " + StringUtil.nullCheckStr(paramVO));
+
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		//glowService.selectPicturePointStats(paramVO)
+		resultMap.put("list", 100 > 0 ? JsonViewUtil.filterListModel(PictureVO.class, glowService.selectPicturePointStats(paramVO), JsonViewUtil.getMapperPointListFilters()) : new ArrayList<PictureVO>());
+		return ReplyVO.createSuccessReply(resultMap);
+	}
+
+	/**
+	 * 통계를 위해 전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출한다.
+	 * @param paramVO
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiFunctionType(type = {FunctionType.GET})
+	@RequestMapping(value= "/glow/pictures/unused", method= {RequestMethod.GET})
+	public Object selectPictureUnused(PointLogVO paramVO) throws Exception {
+		log.debug("### GlowController.selectPictureUnused : paramVO = " + StringUtil.nullCheckStr(paramVO));
+
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+
+		resultMap.put("list", glowService.selectPictureUnused(paramVO));
 
 		return ReplyVO.createSuccessReply(resultMap);
 	}
