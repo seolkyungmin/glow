@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "24b41c77-f2af-4ab9-84de-3c623a7fe3c4",
+		"name": "glow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "폴더등록",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"folder2\",\r\n    \"userId\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "사진등록",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 28,\r\n    \"userId\" : 1,\r\n    \"pictureChildList\":[\r\n    {\r\n        \"name\":\"사진1002\",\r\n        \"pictureId\": 28,\r\n        \"url\":\"www.test1002.com\",\r\n        \"tagList\":[\r\n        {\r\n            \"tagName\" : \"test@@\"\r\n        }\r\n      \r\n        ]\r\n    },\r\n     {\r\n        \"name\":\"사진1002\",\r\n        \"pictureId\": 28,\r\n        \"url\":\"www.test1002.com\",\r\n        \"tagList\":[\r\n        {\r\n            \"tagName\" : \"test@@\"\r\n        }\r\n      \r\n        ]\r\n    }\r\n]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures/child/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures",
+						"child",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "태그 랭킹 TOP10",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures/tags/rankings",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures",
+						"tags",
+						"rankings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "폴더 유저는 자신의 폴더를 생성 순서대로 조회할 수 있으며, 이 때에 각 폴더에 저장된 이미지 갯수를 알 수 있다. 유저는 특정 폴더에서 최근 저장한 순서대로 사진을 조회할 수 있다.",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures?userId=1&name=1_folder2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "name",
+							"value": "1_folder2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "미사용 폴더",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures/unused",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures",
+						"unused"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. 포인트에 대한 선입/선출",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/shop/glow/pictures/stats",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"glow",
+						"pictures",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
