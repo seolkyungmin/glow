@@ -6,7 +6,7 @@ import java.util.List;
 public class GlowVO {
 	private int id;		//PK
 	private String name;
-	private int point;
+	private int points;
 	private List<PictureVO> pictuerList;
 	private String createdAt;
 	private String updatedAt;
@@ -27,12 +27,12 @@ public class GlowVO {
 		this.name = name;
 	}
 
-	public int getPoint() {
-		return point;
+	public int getPoints() {
+		return points;
 	}
 
-	public void setPoint(int point) {
-		this.point = point;
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 	public List<PictureVO> getPictuerList() {

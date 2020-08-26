@@ -5,6 +5,7 @@ public class TagVO {
 	private int id;		//PK
 	private String tagName;
 	private int pictureChildId;
+	private int tagCount;
 	private String createdAt;
 	private String updatedAt;
 
@@ -48,5 +49,12 @@ public class TagVO {
 		this.updatedAt = updatedAt;
 	}
 
+	public int getTagCount() {
+		return tagCount;
+	}
+
+	public void setTagCount(int tagCount) {
+		this.tagCount = tagCount;
+	}
 
 }

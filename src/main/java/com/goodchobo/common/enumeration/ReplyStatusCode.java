@@ -23,6 +23,7 @@ public enum ReplyStatusCode {
     NOT_FOUND_DATA("0300", "데이터가 없습니다."),
     NOT_FOUND_LIST("0301", "리스트가 없습니다."),
     FAILED_INSERT_RDS("0303", "등록에 실패했습니다. 잠시 후 다시 시도해 주세요."),
+    FAILED_PICTURE_INSERT_RDS("0304", "POINT가 부족합니다."),
     DUPLICATE_CODENAME("0310", "키값은 중복이 불가능합니다."),
     FAILED_SELECT_RDS("0311", "조회에 실패했습니다. 잠시 후 다시 시도해 주세요."),
     INVALID_VALUE("0400", "유효하지 않은 입력값입니다. 입력값을 확인해주세요."),

@@ -6,6 +6,7 @@ import com.goodchobo.common.exception.BusinessException;
 import com.goodchobo.common.model.GlowVO;
 import com.goodchobo.common.model.PictureChildVO;
 import com.goodchobo.common.model.PictureVO;
+import com.goodchobo.common.model.TagVO;
 
 public interface GlowService {
 
@@ -13,5 +14,6 @@ public interface GlowService {
 	public int insertPictureChild(PictureVO paramVO) throws BusinessException;
 
 	public ArrayList<PictureVO> selectPicture(GlowVO paramVO) throws BusinessException;
+	public ArrayList<TagVO> selectPictureTagRanking(TagVO paramVO) throws BusinessException;
 
 }

@@ -22,6 +22,7 @@ import com.goodchobo.common.exception.BusinessException;
 import com.goodchobo.common.model.GlowVO;
 import com.goodchobo.common.model.PictureChildVO;
 import com.goodchobo.common.model.PictureVO;
+import com.goodchobo.common.model.TagVO;
 import com.goodchobo.common.reply.ReplyVO;
 import com.goodchobo.common.util.CommonUtil;
 import com.goodchobo.common.util.StringUtil;
@@ -95,6 +96,18 @@ public class GlowController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 
 		resultMap.put("list", glowService.selectPicture(paramVO));
+
+		return ReplyVO.createSuccessReply(resultMap);
+	}
+
+	@ApiFunctionType(type = {FunctionType.GET})
+	@RequestMapping(value= "/glow/pictures/tags/rankings", method= {RequestMethod.GET})
+	public Object selectPictureTagRanking(TagVO paramVO) throws Exception {
+		log.debug("### GlowController.selectPictureTag : paramVO = " + StringUtil.nullCheckStr(paramVO));
+
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+
+		resultMap.put("list", glowService.selectPictureTagRanking(paramVO));
 
 		return ReplyVO.createSuccessReply(resultMap);
 	}

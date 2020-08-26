@@ -1,5 +1,6 @@
 package com.goodchobo.common.model;
 
+import java.util.List;
 
 public class PictureChildVO {
 
@@ -9,6 +10,8 @@ public class PictureChildVO {
 	private int pictureId;
 	private String createdAt;
 	private String updatedAt;
+
+	private List<TagVO> tagList;
 
 	public int getId() {
 		return id;
@@ -56,6 +59,14 @@ public class PictureChildVO {
 
 	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public List<TagVO> getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(List<TagVO> tagList) {
+		this.tagList = tagList;
 	}
 
 }

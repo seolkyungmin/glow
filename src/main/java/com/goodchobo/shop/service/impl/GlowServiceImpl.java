@@ -8,11 +8,13 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.goodchobo.common.enumeration.Consts;
 import com.goodchobo.common.enumeration.ReplyStatusCode;
 import com.goodchobo.common.exception.BusinessException;
 import com.goodchobo.common.model.GlowVO;
 import com.goodchobo.common.model.PictureChildVO;
 import com.goodchobo.common.model.PictureVO;
+import com.goodchobo.common.model.TagVO;
 import com.goodchobo.common.util.StringUtil;
 import com.goodchobo.shop.dao.GlowDao;
 import com.goodchobo.shop.service.GlowService;
@@ -43,6 +45,19 @@ public class GlowServiceImpl implements GlowService{
 			throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
 		}
 
+		//폴더 생성시 1000point 플러스
+		GlowVO glow = new GlowVO();
+		glow.setId(paramVO.getUserId());
+		glow = glowDao.selectGlow(glow);
+		int glowPoint = glow.getPoints();
+		glowPoint += Consts.FOLDER_CREATE_POINT;
+		glow.setPoints(glowPoint);
+		int pointResult = glowDao.insertGlowPoint(glow);
+
+		if(pointResult < 0) {
+			throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+		}
+
 		return result;
 	}
 
@@ -52,12 +67,50 @@ public class GlowServiceImpl implements GlowService{
 		log.debug("GlowServiceImpl.insertPictureChild : PictureVO = " + StringUtil.nullCheckStr(paramVO));
 
 		int result = 0;
+		int index = 0;
+		int tagResult = 0;
+
+		int pictureChildSize = paramVO.getPictureChildList().size();
+		int minusPoint = Consts.PICTURE_CHILD_CREATE_POINT;
+		//사진 갯수로 차감 포인트 확인
+		minusPoint = pictureChildSize * minusPoint;
+		log.info("###################### minusPoint " + minusPoint);
+		GlowVO glow = new GlowVO();
+		glow.setId(paramVO.getUserId());
+		glow = glowDao.selectGlow(glow);
+		int glowPoint = glow.getPoints();
+		//현재포인트
+		log.info("###################### glowPoint " + glowPoint);
+		//현재포인트와 사진 포인트 확인
+		if(glowPoint >= minusPoint) {
+			//현재에서 사진포인트 차감
+			log.info("###################### glowPoint - minusPoint " + (glowPoint - minusPoint));
+			glow.setPoints(glowPoint - minusPoint);
+			int pointResult = glowDao.insertGlowPoint(glow);
+			if(pointResult < 0) {
+				throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+			}
+		}else {
+			throw new BusinessException(ReplyStatusCode.FAILED_PICTURE_INSERT_RDS);
+		}
 
 		for(PictureChildVO pChild : paramVO.getPictureChildList()) {
 			result = glowDao.insertPictureChild(pChild);
 			if(result < 0) {
 				throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
 			}
+
+			int pictureChildId = paramVO.getPictureChildList().get(index).getId();
+			ArrayList<TagVO> tagList = new ArrayList<TagVO>();
+			tagList = (ArrayList<TagVO>) paramVO.getPictureChildList().get(index).getTagList();
+			for(TagVO tag : tagList) {
+				tag.setPictureChildId(pictureChildId);
+				tagResult = glowDao.insertTag(tag);
+				if(tagResult < 0) {
+					throw new BusinessException(ReplyStatusCode.FAILED_INSERT_RDS);
+				}
+			}
+			index++;
 		}
 		paramVO.setId(paramVO.getId());
 
@@ -88,5 +141,18 @@ public class GlowServiceImpl implements GlowService{
 		}
 	}
 
+	@Override
+	public ArrayList<TagVO> selectPictureTagRanking(TagVO paramVO) throws BusinessException {
+		log.debug("### GlowServiceImpl.selectPictureTagRanking : PictureVO = " + StringUtil.nullCheckStr(paramVO));
+		try {
+			ArrayList<TagVO> tagRankingList = new ArrayList<TagVO>();
+			tagRankingList = glowDao.selectPictureTagRanking(paramVO);
+
+			return tagRankingList;
+		} catch (Exception e) {
+			log.error("GlowServiceImpl.selectPicture :: " + e.getMessage());
+			throw new BusinessException(ReplyStatusCode.FAILED_SELECT_RDS);
+		}
+	}
 
 }
