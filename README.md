@@ -37,9 +37,11 @@ N개의 사진을 동시에 저장할 수 있다.
 유저는 자신의 폴더를 생성 순서대로 조회할 수 있으며, 이 때에 각 폴더에 저장된 이미지 갯수를 알 수 있다.
 
 [request] [GET]
+
 /shop/glow/pictures?userId=1
 
 [response]
+
 {
     "data": {
         "list": [
@@ -146,6 +148,7 @@ N개의 사진을 동시에 저장할 수 있다.
 /shop/glow/pictures/child/create  [사진저장, 태그저장]
 
 [request]
+
 {
     "id": 28,
     "userId" : 1,
@@ -176,6 +179,7 @@ N개의 사진을 동시에 저장할 수 있다.
 }
 
 [response]
+
 {
     "data": {
         "id": 28
@@ -190,9 +194,11 @@ N개의 사진을 동시에 저장할 수 있다.
 통계를 위해 전체 사진에서 가장 많이 달린 태그에 대한 TOP 10 을 추출할 수 있어야 한다.
 
 [request] [GET]
+
 /shop/glow/pictures/tags/rankings [태그 TOP10]
 
 [response]
+
 {
     "data": {
         "list": [
@@ -296,7 +302,9 @@ N개의 사진을 동시에 저장할 수 있다.
 포인트가 모자란 경우 사진을 업로드 할 수 없다.
 
 이 추가 요구사항에 따른 수정 내용을 적용해주세요.
+
 /shop/glow/pictures/create        1000 포인트 획득
+
 /shop/glow/pictures/child/create  100  포인트 감소
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -318,9 +326,11 @@ N개의 사진을 동시에 저장할 수 있다.
 포인트소모: 100
 
 [request] [GET]
+
 /shop/glow/pictures/stats?userId=2
 
 [response]
+
 {
     "data": {
         "list": [
@@ -349,9 +359,11 @@ N개의 사진을 동시에 저장할 수 있다.
 통계를 위해 전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출한다
 
 [response] [GET]
+
 /shop/glow/pictures/unused
 
 [request]
+
 {
     "data": {
         "list": [
