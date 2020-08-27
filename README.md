@@ -15,10 +15,8 @@ N개의 사진을 동시에 저장할 수 있다.
 
 이 요구사항에 따른 DB와 REST API를 구성해주세요.
 
-[request]
+[request] [POST]
 /shop/glow/pictures/create
-
-[request]
 {
     "name":"folder",
     "userId":1
@@ -38,7 +36,7 @@ N개의 사진을 동시에 저장할 수 있다.
 
 유저는 자신의 폴더를 생성 순서대로 조회할 수 있으며, 이 때에 각 폴더에 저장된 이미지 갯수를 알 수 있다.
 
-[request]
+[request] [GET]
 /shop/glow/pictures?userId=1
 
 [response]
@@ -144,7 +142,7 @@ N개의 사진을 동시에 저장할 수 있다.
 
 위에서 개발된 사진 업로드 서비스에 다음과 같은 기능이 추가됩니다.
 사진 저장시 N개의 문자 태그를 추가로 전달받아 저장해야 한다.
-[response]
+[response] [POST]
 /shop/glow/pictures/child/create  [사진저장, 태그저장]
 
 [request]
@@ -177,8 +175,7 @@ N개의 사진을 동시에 저장할 수 있다.
   ]
 }
 
-response
-
+[response]
 {
     "data": {
         "id": 28
@@ -192,7 +189,7 @@ response
 
 통계를 위해 전체 사진에서 가장 많이 달린 태그에 대한 TOP 10 을 추출할 수 있어야 한다.
 
-[request]
+[request] [GET]
 /shop/glow/pictures/tags/rankings [태그 TOP10]
 
 [response]
@@ -320,7 +317,7 @@ response
 포인트획득: 1000
 포인트소모: 100
 
-[request]
+[request] [GET]
 /shop/glow/pictures/stats?userId=2
 
 [response]
@@ -351,7 +348,7 @@ response
 
 통계를 위해 전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출한다
 
-[response]
+[response] [GET]
 /shop/glow/pictures/unused
 
 [request]
