@@ -15,285 +15,31 @@ N개의 사진을 동시에 저장할 수 있다.
 
 이 요구사항에 따른 DB와 REST API를 구성해주세요.
 
-[request] [POST]
-/shop/glow/pictures/create
-{
-    "name":"folder",
-    "userId":1
-}
-
-[response]
-{
-    "data": {
-        "id": 30
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
-유저는 자신의 폴더를 생성 순서대로 조회할 수 있으며, 이 때에 각 폴더에 저장된 이미지 갯수를 알 수 있다.
-
-[request] [GET]
-
-/shop/glow/pictures?userId=1
-
-[response]
-
-{
-    "data": {
-        "list": [
-            {
-                "id": 27,
-                "name": "1_folder1",
-                "userId": 1,
-                "pictureChildList": [
-                    {
-                        "id": 27,
-                        "name": null,
-                        "url": null,
-                        "pictureId": 0,
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "tagList": null
-                    }
-                ],
-                "pictureCounts": 0,
-                "createdAt": "2020-08-26 16:08:01.0",
-                "updatedAt": "2020-08-26 16:25:13.0"
-            },
-            {
-                "id": 28,
-                "name": "1_folder2",
-                "userId": 1,
-                "pictureChildList": [
-                    {
-                        "id": 28,
-                        "name": "사진1004",
-                        "url": "www.test1004.com",
-                        "pictureId": 28,
-                        "createdAt": "2020-08-26 16:41:16.0",
-                        "updatedAt": "2020-08-26 16:41:16.0",
-                        "tagList": null
-                    },
-                    {
-                        "id": 28,
-                        "name": "사진1005",
-                        "url": "www.test1005.com",
-                        "pictureId": 28,
-                        "createdAt": "2020-08-26 16:41:16.0",
-                        "updatedAt": "2020-08-26 16:41:16.0",
-                        "tagList": null
-                    },
-                    {
-                        "id": 28,
-                        "name": "사진1002",
-                        "url": "www.test1002.com",
-                        "pictureId": 28,
-                        "createdAt": "2020-08-26 16:09:10.0",
-                        "updatedAt": "2020-08-26 16:09:10.0",
-                        "tagList": null
-                    },
-                    {
-                        "id": 28,
-                        "name": "사진1002",
-                        "url": "www.test1002.com",
-                        "pictureId": 28,
-                        "createdAt": "2020-08-26 16:09:10.0",
-                        "updatedAt": "2020-08-26 16:09:10.0",
-                        "tagList": null
-                    }
-                ],
-                "pictureCounts": 4,
-                "createdAt": "2020-08-26 16:08:32.0",
-                "updatedAt": "2020-08-26 16:25:18.0"
-            },
-            {
-                "id": 29,
-                "name": "1_folder!!!",
-                "userId": 1,
-                "pictureChildList": [
-                    {
-                        "id": 29,
-                        "name": null,
-                        "url": null,
-                        "pictureId": 0,
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "tagList": null
-                    }
-                ],
-                "pictureCounts": 0,
-                "createdAt": "2020-08-26 16:42:11.0",
-                "updatedAt": "2020-08-26 16:42:11.0"
-            }
-        ]
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
+[request] [POST]  
+/shop/glow/pictures/create  
+  
+유저는 자신의 폴더를 생성 순서대로 조회할 수 있으며, 이 때에 각 폴더에 저장된 이미지 갯수를 알 수 있다.  
+[request] [GET]  
+/shop/glow/pictures?userId=1  
+  
 ----------------------------------------------------------------------------------------------------------------------------------------------
-
-2. 사진 태그 서비스
-
-위에서 개발된 사진 업로드 서비스에 다음과 같은 기능이 추가됩니다.
-사진 저장시 N개의 문자 태그를 추가로 전달받아 저장해야 한다.
-[response] [POST]
-/shop/glow/pictures/child/create  [사진저장, 태그저장]
-
-[request]
-
-{
-    "id": 28,
-    "userId" : 1,
-    "pictureChildList":[
-    {
-        "name":"사진1004",
-        "pictureId": 28,
-        "url":"www.test1004.com",
-        "tagList":[
-        {
-            "tagName" : "test@@"
-        }
-      
-        ]
-    },
-     {
-        "name":"사진1005",
-        "pictureId": 28,
-        "url":"www.test1005.com",
-        "tagList":[
-        {
-            "tagName" : "test@@"
-        }
-      
-        ]
-    }
-  ]
-}
-
-[response]
-
-{
-    "data": {
-        "id": 28
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
+  
+2. 사진 태그 서비스  
+  
+위에서 개발된 사진 업로드 서비스에 다음과 같은 기능이 추가됩니다.  
+사진 저장시 N개의 문자 태그를 추가로 전달받아 저장해야 한다.  
+[response] [POST]  
+/shop/glow/pictures/child/create  [사진저장, 태그저장]  
+  
 통계를 위해 전체 사진에서 가장 많이 달린 태그에 대한 TOP 10 을 추출할 수 있어야 한다.
-
-[request] [GET]
-
-/shop/glow/pictures/tags/rankings [태그 TOP10]
-
-[response]
-
-{
-    "data": {
-        "list": [
-            {
-                "id": 4,
-                "tagName": "test@@",
-                "pictureChildId": 13,
-                "tagCount": 11,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 5,
-                "tagName": "test1",
-                "pictureChildId": 13,
-                "tagCount": 10,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 6,
-                "tagName": "test2",
-                "pictureChildId": 13,
-                "tagCount": 9,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 7,
-                "tagName": "test3",
-                "pictureChildId": 13,
-                "tagCount": 8,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 8,
-                "tagName": "test4",
-                "pictureChildId": 13,
-                "tagCount": 7,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 9,
-                "tagName": "test5",
-                "pictureChildId": 13,
-                "tagCount": 6,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 10,
-                "tagName": "test6",
-                "pictureChildId": 13,
-                "tagCount": 5,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 11,
-                "tagName": "test7",
-                "pictureChildId": 13,
-                "tagCount": 4,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 12,
-                "tagName": "test8",
-                "pictureChildId": 13,
-                "tagCount": 3,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            },
-            {
-                "id": 13,
-                "tagName": "test9",
-                "pictureChildId": 13,
-                "tagCount": 2,
-                "createdAt": "2020-08-25 17:36:42.0",
-                "updatedAt": "2020-08-25 17:36:42.0"
-            }
-        ]
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
+  
+[request] [GET]  
+  
+/shop/glow/pictures/tags/rankings [태그 TOP10]  
+  
 ----------------------------------------------------------------------------------------------------------------------------------------------
-
-3. 포인트 서비스
+  
+3. 포인트 서비스  
 
 위에서 개발된 사진 업로드 서비스에 다음과 같은 기능이 추가됩니다.
 유저는 포인트를 갖게된다.
@@ -329,68 +75,7 @@ N개의 사진을 동시에 저장할 수 있다.
 
 /shop/glow/pictures/stats?userId=2
 
-[response]
-
-{
-    "data": {
-        "list": [
-            {
-                "pointLogList": [
-                    {
-                        "plusPoint": 1000,
-                        "minusPoint": 0,
-                        "id": 8
-                    }
-                ],
-                "name": "2_folder!!!",
-                "id": 30,
-                "userId": 2
-            }
-        ]
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
-
 통계를 위해 전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출한다
 
-[response] [GET]
-
-/shop/glow/pictures/unused
-
-[request]
-
-{
-    "data": {
-        "list": [
-            {
-                "id": 1,
-                "userId": 1,
-                "pictureId": 27,
-                "logData": "PICTURE_CREATE_POINT",
-                "points": 1000,
-                "createdAt": "2020-08-26 16:08:01.0",
-                "updatedAt": "2020-08-26 16:08:01.0"
-            },
-            {
-                "id": 7,
-                "userId": 1,
-                "pictureId": 29,
-                "logData": "PICTURE_CREATE_POINT",
-                "points": 1000,
-                "createdAt": "2020-08-26 16:42:11.0",
-                "updatedAt": "2020-08-26 16:42:11.0"
-            }
-        ]
-    },
-    "status": {
-        "message": "정상처리되었습니다.",
-        "errors": null,
-        "code": "0000"
-    }
-}
-
+[response] [GET]  
+/shop/glow/pictures/unused  
